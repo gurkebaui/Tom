@@ -48,7 +48,7 @@ train_dataset = dataset["train"]
 # Preprocess the dataset
 def preprocess_function(examples):
     inputs = tokenizer(
-        examples["text"], truncation=True, padding="max_length", max_length=512
+        examples["story"], truncation=True, padding="max_length", max_length=512
     )
     return inputs
 
