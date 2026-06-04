@@ -31,7 +31,7 @@ model = AutoModelForCausalLM.from_pretrained(
 lora_config = LoraConfig(
     r=8,  # Rank of the low-rank matrices
     lora_alpha=32,  # Scaling factor for the low-rank matrices
-    target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],  # Modules to apply LoRA
+    target_modules=["q_proj", "v_proj"],  # Modules to apply LoRA
     lora_dropout=0.05,  # Dropout probability
     bias="none",  # Bias type
     task_type="CAUSAL_LM",  # Task type
@@ -48,7 +48,7 @@ train_dataset = dataset["train"]
 # Preprocess the dataset
 def preprocess_function(examples):
     inputs = tokenizer(
-        examples["story"], truncation=True, padding="max_length", max_length=512
+        examples["story"], truncation=True, padding="max_length", max_length=128
     )
     return inputs
 
@@ -58,8 +58,8 @@ train_dataset = train_dataset.map(preprocess_function, batched=True)
 # Training arguments
 training_args = TrainingArguments(
     output_dir="./results",
-    per_device_train_batch_size=4,
-    gradient_accumulation_steps=4,
+    per_device_train_batch_size=2,
+    gradient_accumulation_steps=1,
     learning_rate=2e-5,
     num_train_epochs=3,
     save_steps=100,
